@@ -17,6 +17,88 @@ typedef struct{
 
 Pilha cadastroPilha;
 
+//Lista
+
+typedef struct noLivro{
+    char nome[20];
+    char condicao[20];
+    char genero[20];
+    char tel[20];
+    int idRemove;
+    struct no *proximo;
+}NoLivro;
+
+typedef struct noTroca{
+    char nomeLivro[20];
+    char nomeDoador[20];
+    char tel[20];
+    struct no *proximo;
+}NoTroca;
+
+typedef struct{
+    No *inicio;
+    int tam;
+}Lista;
+
+Lista listaLivro;
+Lista listaTroca;
+
+//FILA --------------------------------------
+typedef struct noBD{
+    char nome[20];
+    char condicao[20];
+    char genero[20];
+    char tel[20];
+    int id;
+    struct noBD *proximo;
+}BancoDeDados;
+
+typedef struct{
+    char nome[20];
+    char condicao[20];
+    char genero[20];
+    char tel[20];
+    int id;
+}guardaTemporario;
+
+typedef struct{
+    char nome[30];
+    char senha[30];
+    char tel[20];
+}Cadastro;
+
+void criaCadastro();
+void inspecao(char cadastro[20], char cadastroTel[20], char cadastroSenha[20]);
+int cadastroTelefone(No *no, char tel[20]);
+void lerArquivo();
+void resgataArquivo(char texto[100]);
+int areaLogin(No* no, char nome[20], char telLogin[20]);
+void criarPilha(Pilha *p);
+void empilhar(Pilha *p, char nome[20], char tel[20], char senha[20]);
+void imprimir(No *no);
+int verificaLogin(No *no, char tel[20], char senha[20], char nome[20], char telLogin[20]);
+void inserirFila(No **fila, guardaTemporario temp);
+void imprimirFila(BancoDeDados *fila, int idTroca, char telefoneLogin[20], char nome[20]);
+void verFila(Lista lista);
+void areaCliente(char nome[20], char tel[20]);
+void cadastroLivro(char tel[20]);
+void salvarArquivo(char nome[20], char cond[20], char genero[20], char tel[20]);
+void lerArquivoLivro();
+void resgataArquivoLivro(char texto[100]);
+void criarLista(Lista *lista);
+void inserirInicio(Lista *lista, char nomeLivro[20], char condicao[20], char genero[20], char tel[20]);
+void imprimirLivro(Lista lista, char tel[20], char nomeLogin[20]);
+void areaTroca(BancoDeDados *sistemaLivros, int idTroca, char tel[20], char nome[20]);
+int livrosCadastrado(char tel[20]);
+void deletaLivro(char tel[20], int numeroId);
+void trocaFeita(char nomeLivro[30], char nomeReceptor[20], char tel[20]);
+void minhasTrocas(char tel[20]);
+void lerTrocas();
+void inserirInicioTroca(Lista *lista, char nomeLivro[20], char nomeReceptor[20], char tel[20]);
+void resgataArquivoTroca(char texto[100]);
+void livrosTrocado(char tel[20]);
+
+
 int main()
 {
     setlocale(LC_ALL,""); // Para conseguir escrever corretamente
@@ -95,9 +177,9 @@ void criaCadastro(){ // Para ser possível criar o cadastro
                 int flag=0; // Para confirmar se está correto
                 FILE *file; // Cria um arquivo
                 file = fopen("cadastros.txt", "a+"); // Abre o arquivo que você chamou de cadastro e permite ler e escrever sem perder os dados anteriores
-                if(file == NULL) return 1; // Para evitar problemas ao criar o arquivo
+                if(file == NULL) printf("\nErro ao executar o arquivo\n"); // Para evitar problemas ao criar o arquivo
 
-                char cadastro[3][20] = {}; // Para poder colocar 3 informações diferentes no mesmo cadastro
+                Cadastro cadastro;
 
                 printf("\033[H\033[J"); // Limpa a tela de saida
 
@@ -107,13 +189,13 @@ void criaCadastro(){ // Para ser possível criar o cadastro
                     printf("\x1B[36mPágina de cadastro\n"); // Muda o texto para amarelo
                     printf("\x1B[00m\n\tDigite seu nome: "); // Retorna o texto para a cor original
                     getchar(); // Para ler o enter e esperar o usuário digitar a informação pedida
-                    scanf("%19[^\n]", cadastro[0]); // Ele leu o que voce escreveu na tela e armazena na primeira variavel
+                    scanf("%29[^\n]", cadastro.nome); // Ele leu o que voce escreveu na tela e armazena na primeira variavel
                     do{
                         printf("\x1B[00m\tDigite seu telefone (com DDD): ");
                         getchar();
-                        scanf("%19[^\n]", cadastro[1]); // Ele leu o que voce escreveu na tela e armazena na segunda variavel
+                        scanf("%19[^\n]", cadastro.tel); // Ele leu o que voce escreveu na tela e armazena na segunda variavel
 
-                        flag = cadastroTelefone(cadastroPilha.topo, cadastro[1]);
+                        flag = cadastroTelefone(cadastroPilha.topo, cadastro.tel);
                         if(flag == 1){
                             printf("\n\t\x1B[31mEste telefone já foi cadastrado!\n\tDigite outro número...\n\n");
                         }
@@ -121,12 +203,12 @@ void criaCadastro(){ // Para ser possível criar o cadastro
 
                     printf("\tDigite sua senha: ");
                     getchar();
-                    scanf("%19[^\n]", cadastro[2]); // Ele leu o que voce escreveu na tela e armazena na terceira variavel
+                    scanf("%29[^\n]", cadastro.senha); // Ele leu o que voce escreveu na tela e armazena na terceira variavel
 
                     printf("\x1B[36m\nInformações cadastradas: \n"); // Para mudar a cor para azul claro
-                    printf("\x1B[00m\n\t- Nome digitado foi: %s\n", cadastro[0]); // Para voltar a cor padrão Mostra as informações digitadas no ato do cadastro
-                    printf("\t- Telefone digitado foi: %s\n", cadastro[1]);
-                    printf("\t- Senha digitada foi: %s\n", cadastro[2]);
+                    printf("\x1B[00m\n\t- Nome digitado foi: %s\n", cadastro.nome); // Para voltar a cor padrão Mostra as informações digitadas no ato do cadastro
+                    printf("\t- Telefone digitado foi: %s\n", cadastro.tel);
+                    printf("\t- Senha digitada foi: %s\n", cadastro.senha);
 
                     printf("\x1B[36m\nOs dados armazenados estão corretos?\n"); // Para mudar a cor para azul claro
                     printf("\x1B[00m\n\t1 - Sim\n\t2 - Não\n\n");
@@ -135,22 +217,22 @@ void criaCadastro(){ // Para ser possível criar o cadastro
 
                     if(conf == 2) printf("\033[H\033[J");
                     else if(conf == 1) { // Para salvar o cadastro no arquivo
-                        inspecao(&cadastro[0], &cadastro[1], &cadastro[2]);
+                        inspecao(cadastro.nome, cadastro.tel, cadastro.senha);
                         break;
                     }
                 }
 
                 printf("\x1B[36m\nCadastro foi concluído com sucesso!\n"); // Para mudar a cor para azul claro
-                fprintf(file, "%s-%s-%s,", cadastro[0], cadastro[1], cadastro[2]); // Para escrever no arquivo as informações dadas no cadastro
+                fprintf(file, "%s-%s-%s,", cadastro.nome, cadastro.tel, cadastro.senha); // Para escrever no arquivo as informações dadas no cadastro
 
-                empilhar(&cadastroPilha, cadastro[0], cadastro[1], cadastro[2]);
+                empilhar(&cadastroPilha, cadastro.nome, cadastro.tel, cadastro.senha);
 
                 fclose(file); // Fecha o arquivo criado
 
                 main();
 }
 
-void inspecao(char *cadastro[20], char *cadastroTel[20], char *cadastroSenha[20]){
+void inspecao(char cadastro[20], char cadastroTel[20], char cadastroSenha[20]){
     int lengthNome = strlen(cadastro);
     char check[lengthNome];
     int i=0;
@@ -194,8 +276,6 @@ void inspecao(char *cadastro[20], char *cadastroTel[20], char *cadastroSenha[20]
     strcpy(cadastro, check);
     strcpy(cadastroTel, checkTel);
     strcpy(cadastroSenha, checkSenha);
-
-    return 0;
 }
 
 int cadastroTelefone(No *no, char tel[20]){
@@ -227,12 +307,10 @@ void lerArquivo(){
             }
         }
         fclose(file);
-        return 0;
     }
     else{
-        return -1;
+        printf("\nErro ao executar o arquivo\n");
     }
-    return 0;
 }
 
 void resgataArquivo(char texto[100]){
@@ -345,49 +423,6 @@ int verificaLogin(No *no, char tel[20], char senha[20], char nome[20], char telL
 }
 
 //-------------------------------------------------------AMBIENTE LOGADO PARA O USUARIO-----------------------------------------------------------------------
-
-// LISTA
-typedef struct noLivro{
-    char nome[20];
-    char condicao[20];
-    char genero[20];
-    char tel[20];
-    int idRemove;
-    struct no *proximo;
-}NoLivro;
-
-typedef struct noTroca{
-    char nomeLivro[20];
-    char nomeDoador[20];
-    char tel[20];
-    struct no *proximo;
-}NoTroca;
-
-typedef struct{
-    No *inicio;
-    int tam;
-}Lista;
-
-Lista listaLivro;
-Lista listaTroca;
-
-//FILA --------------------------------------
-typedef struct noBD{
-    char nome[20];
-    char condicao[20];
-    char genero[20];
-    char tel[20];
-    int id;
-    struct noBD *proximo;
-}BancoDeDados;
-
-typedef struct{
-    char nome[20];
-    char condicao[20];
-    char genero[20];
-    char tel[20];
-    int id;
-}guardaTemporario;
 
 void inserirFila(No **fila, guardaTemporario temp){
     BancoDeDados *aux, *novo = malloc(sizeof(BancoDeDados));
@@ -591,7 +626,7 @@ void salvarArquivo(char nome[20], char cond[20], char genero[20], char tel[20]){
     FILE *fileLivro;
 
     fileLivro = fopen("livros.txt", "a+");
-    if(fileLivro == NULL) return 1;
+    if(fileLivro == NULL) printf("\nErro ao executar arquivo\n");
 
     fprintf(fileLivro, "%s-%s-%s-%s,", nome, cond, genero, tel);
 
@@ -618,7 +653,7 @@ void lerArquivoLivro(){
         fclose(fileLivro);
     }
     else{
-        return -1;
+        printf("\nErro ao executar o arquivo\n");
     }
 }
 
@@ -776,7 +811,7 @@ int livrosCadastrado(char tel[20]){
 
 void deletaLivro(char tel[20], int numeroId){
     FILE *fileLivro;
-    if(fileLivro == NULL) return 1;
+    if(fileLivro == NULL) printf("\nErro ao executar o arquivo\n");
     fileLivro = fopen("livros.txt", "w");
     fclose(fileLivro);
 
@@ -800,7 +835,7 @@ void deletaLivro(char tel[20], int numeroId){
             }
             else {
                 fileLivro = fopen("livros.txt", "a+");
-                if(fileLivro == NULL) return 1;
+                if(fileLivro == NULL) printf("\nErro ao executar o arquivo\n");
 
                 fprintf(fileLivro, "%s-%s-%s-%s,", noLista->nome, noLista->condicao, noLista->genero, noLista->tel);
 
@@ -813,12 +848,12 @@ void deletaLivro(char tel[20], int numeroId){
 void trocaFeita(char nomeLivro[30], char nomeReceptor[20], char tel[20]){
 
     FILE *fileLivro;
-    if(fileLivro == NULL) return 1;
+    if(fileLivro == NULL) printf("\nErro ao executar o arquivo\n");
     fileLivro = fopen("livros.txt", "w");
     fclose(fileLivro);
 
     FILE *fileTroca;
-    if(fileTroca == NULL) return 1;
+    if(fileTroca == NULL) printf("\nErro ao executar o arquivo\n");
 
     printf("\033[H\033[J");
     printf("Troca realizada com sucesso!");
@@ -839,7 +874,7 @@ void trocaFeita(char nomeLivro[30], char nomeReceptor[20], char tel[20]){
             }
             else {
                 fileLivro = fopen("livros.txt", "a+");
-                if(fileLivro == NULL) return 1;
+                if(fileLivro == NULL) printf("\nErro ao executar o arquivo\n");
 
                 fprintf(fileLivro, "%s-%s-%s-%s,", noLista->nome, noLista->condicao, noLista->genero, noLista->tel);
 
@@ -877,7 +912,7 @@ void lerTrocas(){
         fclose(fileTroca);
     }
     else{
-        return -1;
+        printf("\nErro ao executar o arquivo\n");
     }
 }
 
