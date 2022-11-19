@@ -25,17 +25,17 @@ typedef struct noLivro{
     char genero[20];
     char tel[20];
     int idRemove;
-    struct no *proximo;
+    struct noLivro *proximo;
 }NoLivro;
 
 typedef struct noTroca{
     char nomeLivro[20];
     char nomeDoador[20];
     char tel[20];
-    struct no *proximo;
+    struct noTroca *proximo;
 }NoTroca;
 
-typedef struct{
+typedef struct {
     No *inicio;
     int tam;
 }Lista;
@@ -77,7 +77,7 @@ void criarPilha(Pilha *p);
 void empilhar(Pilha *p, char nome[20], char tel[20], char senha[20]);
 void imprimir(No *no);
 int verificaLogin(No *no, char tel[20], char senha[20], char nome[20], char telLogin[20]);
-void inserirFila(No **fila, guardaTemporario temp);
+void inserirFila(BancoDeDados **fila, guardaTemporario temp);
 void imprimirFila(BancoDeDados *fila, int idTroca, char telefoneLogin[20], char nome[20]);
 void verFila(Lista lista);
 void areaCliente(char nome[20], char tel[20]);
@@ -103,7 +103,7 @@ int main()
 {
     setlocale(LC_ALL,""); // Para conseguir escrever corretamente
 
-    int op; // Para você conseguir mudar a opção
+    int op; // Para vocÃª conseguir mudar a opÃ§Ã£o
     char telLogin[20]; // Para armazenar o telefone de contato
     char senhaLogin[20]; // Para criar uma senha para o login
     int opLogin; // Para o menu de login
@@ -115,12 +115,12 @@ int main()
 
     do
     {
-        printf("\033[H\033[J"); // Para limpar a saída padrão
+        printf("\033[H\033[J"); // Para limpar a saÃ­da padrÃ£o
         printf("\x1B[31mBem Vindos a troca de livros online\n"); // Para alterar a cor para vermelho
-        printf("\x1B[36m\nNesta plataforma você poderá procurar os livros que\ntenha interesse, e verificar se há a possibilidade de\ntroca com aquele que você tenha cadastrado\n"); // Para alterar a cor para azul claro
-        printf("\x1B[00m\n1 - Criar um cadastro\n"); // Para voltar a cor padrão Opção para criar um cadastro
-        printf("2 - Efetuar Login\n"); // Opção para fazer o login
-        printf("3 - Sair\n"); // Opção para sair da tela padrão
+        printf("\x1B[36m\nNesta plataforma vocÃª poderÃ¡ procurar os livros que\ntenha interesse, e verificar se hÃ¡ a possibilidade de\ntroca com aquele que vocÃª tenha cadastrado\n"); // Para alterar a cor para azul claro
+        printf("\x1B[00m\n1 - Criar um cadastro\n"); // Para voltar a cor padrÃ£o OpÃ§Ã£o para criar um cadastro
+        printf("2 - Efetuar Login\n"); // OpÃ§Ã£o para fazer o login
+        printf("3 - Sair\n"); // OpÃ§Ã£o para sair da tela padrÃ£o
 
 
         //Apagar
@@ -128,22 +128,22 @@ int main()
         imprimir(cadastroPilha.topo);
         //Apagar
 
-        printf("\nDigite sua opção: ");
-        scanf("%d", &op); // Para que você coloque qual opção deseja
+        printf("\nDigite sua opÃ§Ã£o: ");
+        scanf("%d", &op); // Para que vocÃª coloque qual opÃ§Ã£o deseja
 
         switch(op){
             case 1: // Caso escolha fazer o cadastro
-                criaCadastro(); // Para você ser direcionado a fazer o cadastro
+                criaCadastro(); // Para vocÃª ser direcionado a fazer o cadastro
             break;
 
             case 2: // Caso escolha fazer o login
 
-                printf("\033[H\033[J"); // Para limpar a saída padrão
-                printf("\x1B[36mÁrea de login\n\n"); // Para mudar a cor para azul claro
+                printf("\033[H\033[J"); // Para limpar a saÃ­da padrÃ£o
+                printf("\x1B[36mÃrea de login\n\n"); // Para mudar a cor para azul claro
 
-                printf("\x1B[00m1 - Acessar área de login\n2 - Voltar\n"); // Para voltar a cor padrão
-                printf("\nDigite sua opção: ");
-                scanf("%d", &opLogin); // Para verificar a opção que deseja
+                printf("\x1B[00m1 - Acessar Ã¡rea de login\n2 - Voltar\n"); // Para voltar a cor padrÃ£o
+                printf("\nDigite sua opÃ§Ã£o: ");
+                scanf("%d", &opLogin); // Para verificar a opÃ§Ã£o que deseja
 
                 if(opLogin == 1){
                     int flagLogin = 1;
@@ -164,19 +164,19 @@ int main()
             break;
 
             case 3: // Caso deseja sair
-                printf("\033[H\033[J"); // Limpa a saida padrão
-                printf("\x1B[33m\n\tObrigado por usar nossa plataforma. Até mais!\n\x1B[00m"); // Para mudar a cor para amarelo
+                printf("\033[H\033[J"); // Limpa a saida padrÃ£o
+                printf("\x1B[33m\n\tObrigado por usar nossa plataforma. AtÃ© mais!\n\x1B[00m"); // Para mudar a cor para amarelo
             break;
         }
-    }while(op != 1 && op != 2 && op != 3); // Sai do do while caso o numero não seja 1, 2 ou 3
+    }while(op != 1 && op != 2 && op != 3); // Sai do do while caso o numero nÃ£o seja 1, 2 ou 3
 }
 
-void criaCadastro(){ // Para ser possível criar o cadastro
+void criaCadastro(){ // Para ser possÃ­vel criar o cadastro
 
                 int conf=2;
-                int flag=0; // Para confirmar se está correto
+                int flag=0; // Para confirmar se estÃ¡ correto
                 FILE *file; // Cria um arquivo
-                file = fopen("cadastros.txt", "a+"); // Abre o arquivo que você chamou de cadastro e permite ler e escrever sem perder os dados anteriores
+                file = fopen("cadastros.txt", "a+"); // Abre o arquivo que vocÃª chamou de cadastro e permite ler e escrever sem perder os dados anteriores
                 if(file == NULL) printf("\nErro ao executar o arquivo\n"); // Para evitar problemas ao criar o arquivo
 
                 Cadastro cadastro;
@@ -186,9 +186,9 @@ void criaCadastro(){ // Para ser possível criar o cadastro
                 while(conf == 2)
                 {
                     printf("\033[H\033[J");
-                    printf("\x1B[36mPágina de cadastro\n"); // Muda o texto para amarelo
+                    printf("\x1B[36mPÃ¡gina de cadastro\n"); // Muda o texto para amarelo
                     printf("\x1B[00m\n\tDigite seu nome: "); // Retorna o texto para a cor original
-                    getchar(); // Para ler o enter e esperar o usuário digitar a informação pedida
+                    getchar(); // Para ler o enter e esperar o usuÃ¡rio digitar a informaÃ§Ã£o pedida
                     scanf("%29[^\n]", cadastro.nome); // Ele leu o que voce escreveu na tela e armazena na primeira variavel
                     do{
                         printf("\x1B[00m\tDigite seu telefone (com DDD): ");
@@ -197,7 +197,7 @@ void criaCadastro(){ // Para ser possível criar o cadastro
 
                         flag = cadastroTelefone(cadastroPilha.topo, cadastro.tel);
                         if(flag == 1){
-                            printf("\n\t\x1B[31mEste telefone já foi cadastrado!\n\tDigite outro número...\n\n");
+                            printf("\n\t\x1B[31mEste telefone jÃ¡ foi cadastrado!\n\tDigite outro nÃºmero...\n\n");
                         }
                     }while(flag == 1);
 
@@ -205,15 +205,15 @@ void criaCadastro(){ // Para ser possível criar o cadastro
                     getchar();
                     scanf("%29[^\n]", cadastro.senha); // Ele leu o que voce escreveu na tela e armazena na terceira variavel
 
-                    printf("\x1B[36m\nInformações cadastradas: \n"); // Para mudar a cor para azul claro
-                    printf("\x1B[00m\n\t- Nome digitado foi: %s\n", cadastro.nome); // Para voltar a cor padrão Mostra as informações digitadas no ato do cadastro
+                    printf("\x1B[36m\nInformaÃ§Ãµes cadastradas: \n"); // Para mudar a cor para azul claro
+                    printf("\x1B[00m\n\t- Nome digitado foi: %s\n", cadastro.nome); // Para voltar a cor padrÃ£o Mostra as informaÃ§Ãµes digitadas no ato do cadastro
                     printf("\t- Telefone digitado foi: %s\n", cadastro.tel);
                     printf("\t- Senha digitada foi: %s\n", cadastro.senha);
 
-                    printf("\x1B[36m\nOs dados armazenados estão corretos?\n"); // Para mudar a cor para azul claro
-                    printf("\x1B[00m\n\t1 - Sim\n\t2 - Não\n\n");
-                    printf("Digite sua opção: ");
-                    scanf("%d", &conf); // Para colocar se confirma ou não
+                    printf("\x1B[36m\nOs dados armazenados estÃ£o corretos?\n"); // Para mudar a cor para azul claro
+                    printf("\x1B[00m\n\t1 - Sim\n\t2 - NÃ£o\n\n");
+                    printf("Digite sua opÃ§Ã£o: ");
+                    scanf("%d", &conf); // Para colocar se confirma ou nÃ£o
 
                     if(conf == 2) printf("\033[H\033[J");
                     else if(conf == 1) { // Para salvar o cadastro no arquivo
@@ -222,8 +222,8 @@ void criaCadastro(){ // Para ser possível criar o cadastro
                     }
                 }
 
-                printf("\x1B[36m\nCadastro foi concluído com sucesso!\n"); // Para mudar a cor para azul claro
-                fprintf(file, "%s-%s-%s,", cadastro.nome, cadastro.tel, cadastro.senha); // Para escrever no arquivo as informações dadas no cadastro
+                printf("\x1B[36m\nCadastro foi concluÃ­do com sucesso!\n"); // Para mudar a cor para azul claro
+                fprintf(file, "%s-%s-%s,", cadastro.nome, cadastro.tel, cadastro.senha); // Para escrever no arquivo as informaÃ§Ãµes dadas no cadastro
 
                 empilhar(&cadastroPilha, cadastro.nome, cadastro.tel, cadastro.senha);
 
@@ -354,9 +354,9 @@ int areaLogin(No* no, char nome[20], char telLogin[20]){
     char tel[20], senha[20], flag;
 
     if(no){
-        printf("\x1B[36m\nÁrea de login\n\n");
+        printf("\x1B[36m\nÃrea de login\n\n");
 
-        printf("\x1B[00mPara efetuar o seu login, você deve inserir seu telefone e senha\n\n");
+        printf("\x1B[00mPara efetuar o seu login, vocÃª deve inserir seu telefone e senha\n\n");
 
         printf("\tDigite seu telefone: ");
         getchar();
@@ -392,7 +392,7 @@ void empilhar(Pilha *p, char nome[20], char tel[20], char senha[20]){
         p->topo = novo;
         p->tam++;
     } else {
-        printf("\n\tErro ao alocar memória!!");
+        printf("\n\tErro ao alocar memÃ³ria!!");
     }
 }
 
@@ -424,8 +424,8 @@ int verificaLogin(No *no, char tel[20], char senha[20], char nome[20], char telL
 
 //-------------------------------------------------------AMBIENTE LOGADO PARA O USUARIO-----------------------------------------------------------------------
 
-void inserirFila(No **fila, guardaTemporario temp){
-    BancoDeDados *aux, *novo = malloc(sizeof(BancoDeDados));
+void inserirFila(BancoDeDados **fila, guardaTemporario temp){
+    BancoDeDados *aux, *novo = (BancoDeDados*) malloc(sizeof(BancoDeDados));
     if(novo){
         strcpy(novo->nome,temp.nome);
         strcpy(novo->condicao, temp.condicao);
@@ -455,15 +455,15 @@ void imprimirFila(BancoDeDados *fila, int idTroca, char telefoneLogin[20], char 
     printf("\n\t------- TROCA ID: %d --------\n", idTroca);
     while(fila){
         if(idTroca == fila->id && strcmp(fila->tel, telefoneLogin)==0){
-            printf("\nDeculpe, mas esse livro já é seu");
+            printf("\nDeculpe, mas esse livro jÃ¡ Ã© seu");
             getchar();
             break;
         }else if(idTroca == fila->id && strcmp(fila->tel, telefoneLogin)!=0){
                 printf("\n------------------------");
                 printf("\n- Nome: %s\n", fila->nome);
-                printf("- Condição: %s\n", fila->condicao);
-                printf("- Gênero: %s", fila->genero);
-                printf("\n- %ID: %d\n", fila->id);
+                printf("- CondiÃ§Ã£o: %s\n", fila->condicao);
+                printf("- GÃªnero: %s", fila->genero);
+                printf("\n- ID: %d\n", fila->id);
                 printf("------------------------\n");
                 flag++;
                 idRemover = fila->id;
@@ -474,8 +474,8 @@ void imprimirFila(BancoDeDados *fila, int idTroca, char telefoneLogin[20], char 
     }
     if(flag>0){
         printf("\nDeseja realizar o pedido: ");
-        printf("\n\n1 - Sim\n2 - Não");
-        printf("\n\nDigite sua opção: ");
+        printf("\n\n1 - Sim\n2 - NÃ£o");
+        printf("\n\nDigite sua opÃ§Ã£o: ");
         scanf("%d", &decisao);
 
         if(decisao == 1){
@@ -507,7 +507,7 @@ void verFila(Lista lista){
             noLista = noLista->proximo;
         }
     } else {
-        printf("\nAinda não temos nenhum livro cadastrado em nosso sistema\n");
+        printf("\nAinda nÃ£o temos nenhum livro cadastrado em nosso sistema\n");
         getchar();
     }
 }
@@ -529,10 +529,10 @@ void areaCliente(char nome[20], char tel[20]){
         printf("\n\n\tO que deseja fazer?\n\n");
         printf("1 - Cadastrar um livro\n");
         printf("2 - Acessar seus dados\n");
-        printf("3 - Ver livros disponíveis para troca\n");
+        printf("3 - Ver livros disponÃ­veis para troca\n");
         printf("4 - LogOut");
 
-        printf("\n\nDigite sua opção: ");
+        printf("\n\nDigite sua opÃ§Ã£o: ");
         scanf("%d", &opCliente);
 
         switch(opCliente){
@@ -543,12 +543,12 @@ void areaCliente(char nome[20], char tel[20]){
 
             case 2:
                 printf("\033[H\033[J");
-                printf("Informações pessoais");
+                printf("InformaÃ§Ãµes pessoais");
 
                 printf("\n\n1 - Seus livros cadastrados");
                 printf("\n2 - Seus pedidos");
 
-                printf("\n\nDigite sua opção: ");
+                printf("\n\nDigite sua opÃ§Ã£o: ");
                 scanf("%d", &opInfo);
 
                 if(opInfo == 1)
@@ -560,10 +560,10 @@ void areaCliente(char nome[20], char tel[20]){
                         opCliente = 0;
                     }
                     else{
-                        printf("\n\nOpções:");
+                        printf("\n\nOpÃ§Ãµes:");
                         printf("\n\n1 - Excluir um cadastro");
                         printf("\n2 - Voltar");
-                        printf("\n\nDigite sua opção: ");
+                        printf("\n\nDigite sua opÃ§Ã£o: ");
                         scanf("%d", &opLiCad);
 
                         if(opLiCad == 1) {
@@ -602,15 +602,15 @@ void cadastroLivro(char tel[20]){
     char infoLivro[3][20];
 
     printf("\033[H\033[J");
-    printf("\x1B[36mÁrea de cadastro para livros");
+    printf("\x1B[36mÃrea de cadastro para livros");
 
     printf("\n\n\x1B[00mDigite o nome do seu livro: ");
     getchar();
     scanf("%19[^\n]", infoLivro[0]);
-    printf("Digite a condição do seu livro (Ótimo, bom ou ruim): ");
+    printf("Digite a condiÃ§Ã£o do seu livro (Ã“timo, bom ou ruim): ");
     getchar();
     scanf("%19[^\n]", infoLivro[1]);
-    printf("Digite o gênero do seu livro: ");
+    printf("Digite o gÃªnero do seu livro: ");
     getchar();
     scanf("%19[^\n]", infoLivro[2]);
 
@@ -706,7 +706,7 @@ void criarLista(Lista *lista){
 }
 
 void inserirInicio(Lista *lista, char nomeLivro[20], char condicao[20], char genero[20], char tel[20]){
-    NoLivro *novo = malloc(sizeof(NoLivro));
+    NoLivro *novo = (NoLivro*) malloc(sizeof(NoLivro));
     if(novo){
         strcpy(novo->nome, nomeLivro);
         strcpy(novo->condicao, condicao);
@@ -727,14 +727,14 @@ void imprimirLivro(Lista lista, char tel[20], char nomeLogin[20]){
     guardaTemporario temp;
     NoLivro *noLista = lista.inicio;
     printf("\033[H\033[J");
-    printf("Lista - Livros Disponíveis\n");
+    printf("Lista - Livros DisponÃ­veis\n");
     printf("-----------------------------------");
     if(lista.tam > 0){
         while(noLista){
 
             printf("\nNome: %s", noLista->nome);
-            printf("\nCondição: %s", noLista->condicao);
-            printf("\nGênero: %s", noLista->genero);
+            printf("\nCondiÃ§Ã£o: %s", noLista->condicao);
+            printf("\nGÃªnero: %s", noLista->genero);
             printf("\nID: %d", id++);
             printf("\n-----------------------------------");
 
@@ -749,7 +749,7 @@ void imprimirLivro(Lista lista, char tel[20], char nomeLogin[20]){
             noLista = noLista->proximo;
         }
         printf("\n\n");
-        printf("Qual livro você deseja realizar uma troca?\nDigite o ID do livro, ou '0' para voltar: ");
+        printf("Qual livro vocÃª deseja realizar uma troca?\nDigite o ID do livro, ou '0' para voltar: ");
         scanf("%d", &idTroca);
 
         if(idTroca > 0 && idTroca < id){
@@ -761,7 +761,7 @@ void imprimirLivro(Lista lista, char tel[20], char nomeLogin[20]){
             getchar();
         }
     } else {
-        printf("\n\n\tAinda não temos nenhum livro cadastrado em nosso sistema\n");
+        printf("\n\n\tAinda nÃ£o temos nenhum livro cadastrado em nosso sistema\n");
         getchar();
     }
     getchar();
@@ -770,7 +770,7 @@ void imprimirLivro(Lista lista, char tel[20], char nomeLogin[20]){
 void areaTroca(BancoDeDados *sistemaLivros, int idTroca, char tel[20], char nome[20]){
     int verificaID = 0, i=0;
     printf("\033[H\033[J");
-    printf("Área de troca\n");
+    printf("Ãrea de troca\n");
 
     imprimirFila(sistemaLivros, idTroca, tel, nome);
 
@@ -781,7 +781,7 @@ int livrosCadastrado(char tel[20]){
     int flag=0;
     NoLivro *noLista = listaLivro.inicio;
     printf("\033[H\033[J");
-    printf("Livro(s) cadastrados(s) por você\n");
+    printf("Livro(s) cadastrados(s) por vocÃª\n");
     printf("-----------------------------------");
     if(listaLivro.tam > 0){
         while(noLista){
@@ -789,8 +789,8 @@ int livrosCadastrado(char tel[20]){
             {
                 noLista->idRemove=i++;
                 printf("\nNome: %s", noLista->nome);
-                printf("\nCondição: %s", noLista->condicao);
-                printf("\nGênero: %s", noLista->genero);
+                printf("\nCondiÃ§Ã£o: %s", noLista->condicao);
+                printf("\nGÃªnero: %s", noLista->genero);
                 printf("\nID: %d", noLista->idRemove);
                 printf("\n-----------------------------------");
                 flag++;
@@ -804,7 +804,7 @@ int livrosCadastrado(char tel[20]){
     if(flag>0) return --i;
 
     else {
-        printf("\n\nAinda não temos nenhum livro seu cadastrado em nosso sistema\n");
+        printf("\n\nAinda nÃ£o temos nenhum livro seu cadastrado em nosso sistema\n");
         return 0;
     }
 }
@@ -827,8 +827,8 @@ void deletaLivro(char tel[20], int numeroId){
             if(noLista->idRemove == idRemover)
             {
                 printf("\nNome: %s", noLista->nome);
-                printf("\nCondição: %s", noLista->condicao);
-                printf("\nGênero: %s", noLista->genero);
+                printf("\nCondiÃ§Ã£o: %s", noLista->condicao);
+                printf("\nGÃªnero: %s", noLista->genero);
                 printf("\nID: %d", noLista->idRemove);
                 printf("\n-----------------------------------");
                 getchar();
@@ -866,8 +866,8 @@ void trocaFeita(char nomeLivro[30], char nomeReceptor[20], char tel[20]){
             {
                 fileTroca = fopen("troca.txt", "a+");
                 printf("\nNome: %s", noLista->nome);
-                printf("\nCondição: %s", noLista->condicao);
-                printf("\nGênero: %s\n", noLista->genero);
+                printf("\nCondiÃ§Ã£o: %s", noLista->condicao);
+                printf("\nGÃªnero: %s\n", noLista->genero);
                 fprintf(fileTroca, "%s-%s-%s,", noLista->nome, nomeReceptor, tel);
                 fclose(fileTroca);
                 getchar();
@@ -917,7 +917,7 @@ void lerTrocas(){
 }
 
 void inserirInicioTroca(Lista *lista, char nomeLivro[20], char nomeReceptor[20], char tel[20]){
-    NoTroca *novo = malloc(sizeof(NoTroca));
+    NoTroca *novo = (NoTroca*) malloc(sizeof(NoTroca));
     if(novo){
         strcpy(novo->nomeLivro, nomeLivro);
         strcpy(novo->nomeDoador, nomeReceptor);
@@ -975,7 +975,7 @@ void livrosTrocado(char tel[20]){
     int length=0;
 
     printf("\033[H\033[J");
-    printf("Livro(s) trocado(s) por você\n\n- Ordenados Alfabéticamente\n\n");
+    printf("Livro(s) trocado(s) por vocÃª\n\n- Ordenados AlfabÃ©ticamente\n\n");
     printf("------------------------------");
     if(listaTroca.tam > 0){
         while(noTroca){
@@ -995,16 +995,15 @@ void livrosTrocado(char tel[20]){
     }
 
     if(flag == 0){
-        printf("\n\n\tVocê ainda não realizou nenhuma troca");
+        printf("\n\n\tVocÃª ainda nÃ£o realizou nenhuma troca");
     } else {
 
         //ORDENANDO O VETOR
-        int x,y, res;
+        int x,y;
         char aux[20];
         for(x=0; x<=flag; x++){
             for(y=x+1; y<=flag; y++){
-                res = strcmp(strings[x], strings[y]);
-                if(res>0){
+                if(strcmp(strings[x], strings[y])>0){
                 strcpy(aux, strings[x]);
                 strcpy(strings[x], strings[y]);
                 strcpy(strings[y], aux);
