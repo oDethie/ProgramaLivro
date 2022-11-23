@@ -7,6 +7,11 @@ typedef struct no{
     char nome[20];
     char tel[20];
     char senha[20];
+    char condicao[20];
+    char genero[20];
+    char nomeLivro[20];
+    char nomeDoador[20];
+    int idRemove;
     struct no *proximo;
 }No;
 
@@ -67,6 +72,10 @@ typedef struct{
     char tel[20];
 }Cadastro;
 
+typedef struct{
+    char nomeLivro[20];
+}ordenarNome;
+
 void criaCadastro();
 void inspecao(char cadastro[20], char cadastroTel[20], char cadastroSenha[20]);
 int cadastroTelefone(No *no, char tel[20]);
@@ -124,8 +133,8 @@ int main()
 
 
         //Apagar
-        printf("\n\n");
-        imprimir(cadastroPilha.topo);
+            //printf("\n\n");
+            //imprimir(cadastroPilha.topo);
         //Apagar
 
         printf("\nDigite sua opção: ");
@@ -971,7 +980,7 @@ void livrosTrocado(char tel[20]){
     NoTroca *noTroca = listaTroca.inicio;
     int flag=0;
     int i=0;
-    char strings[10][20];
+    ordenarNome strings[10];
     int length=0;
 
     printf("\033[H\033[J");
@@ -980,9 +989,7 @@ void livrosTrocado(char tel[20]){
     if(listaTroca.tam > 0){
         while(noTroca){
             if(strcmp(noTroca->tel, tel)==0){
-                //length = strlen(noTroca->nomeLivro);
-                //strings[i] = malloc(length * sizeof(char));
-                strcpy(strings[i], noTroca->nomeLivro);
+                strcpy(strings[i].nomeLivro , noTroca->nomeLivro);
                 i++;
                 flag++;
             }
@@ -999,23 +1006,28 @@ void livrosTrocado(char tel[20]){
     } else {
 
         //ORDENANDO O VETOR
-        int x,y;
-        char aux[20];
-        for(x=0; x<=flag; x++){
-            for(y=x+1; y<=flag; y++){
-                if(strcmp(strings[x], strings[y])>0){
-                strcpy(aux, strings[x]);
-                strcpy(strings[x], strings[y]);
-                strcpy(strings[y], aux);
+        if(flag>1){
+            int x,y;
+            char aux[20];
+            for(x=0; x<=flag; x++){
+                for(y=x+1; y<=flag; y++){
+                    if(strcmp(strings[x].nomeLivro, strings[y].nomeLivro)>0){
+                    strcpy(aux, strings[x].nomeLivro);
+                    strcpy(strings[x].nomeLivro, strings[y].nomeLivro);
+                    strcpy(strings[y].nomeLivro, aux);
+                    }
                 }
             }
+            i=0;
+            printf("\n");
+            while(i<flag){
+                printf("\n- %s", strings[i].nomeLivro);
+                i++;
+            }
         }
-
-        i=0;
-        printf("\n");
-        while(i<flag){
-            printf("\n- %s", strings[i]);
-            i++;
+        else{
+            printf("\n");
+            printf("\n- %s", strings[0].nomeLivro);
         }
     }
     getchar();
