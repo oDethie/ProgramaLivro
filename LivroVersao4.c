@@ -1,3 +1,8 @@
+// Trabalho final AED II
+// Sistema para realizacao de troca de livros
+// Integrantes :
+// Ana Beatriz, Bianca Krauss, Joao Victor, Thiago Bento e Thiago Dias
+
 #include <stdio.h>
 #include <locale.h>
 #include <string.h>
@@ -26,12 +31,6 @@ int main()
         printf("\x1B[00m\n1 - Criar um cadastro\n"); // Para voltar a cor padrão Opção para criar um cadastro
         printf("2 - Efetuar Login\n"); // Opção para fazer o login
         printf("3 - Sair\n"); // Opção para sair da tela padrão
-
-
-        //Apagar
-            //printf("\n\n");
-            //imprimir(cadastroPilha.topo);
-        //Apagar
 
         printf("\nDigite sua opção: ");
         scanf("%d", &op); // Para que você coloque qual opção deseja
@@ -75,6 +74,8 @@ int main()
         }
     }while(op != 1 && op != 2 && op != 3); // Sai do do while caso o numero não seja 1, 2 ou 3
 }
+
+//FUNÇÂO feita para criar um novo usuario
 
 void criaCadastro(){ // Para ser possível criar o cadastro
 
@@ -122,7 +123,7 @@ void criaCadastro(){ // Para ser possível criar o cadastro
 
                     if(conf == 2) printf("\033[H\033[J");
                     else if(conf == 1) { // Para salvar o cadastro no arquivo
-                        inspecao(cadastro.nome, cadastro.tel, cadastro.senha);
+                        inspecao(cadastro.nome, cadastro.tel, cadastro.senha); //Preparar strings para salvar no arquivo
                         break;
                     }
                 }
@@ -136,6 +137,8 @@ void criaCadastro(){ // Para ser possível criar o cadastro
 
                 main();
 }
+
+//Aqui ira realizar uma vistoria na string, caso tiver espaço em branco será trocado por _, e no tel e senha sera retirado os espaços em branco
 
 void inspecao(char cadastro[20], char cadastroTel[20], char cadastroSenha[20]){
     int lengthNome = strlen(cadastro);
@@ -183,6 +186,8 @@ void inspecao(char cadastro[20], char cadastroTel[20], char cadastroSenha[20]){
     strcpy(cadastroSenha, checkSenha);
 }
 
+//Aqui será feito uma inpeção no tel, para não cadastrar mais de um mesmo numero
+
 int cadastroTelefone(No *no, char tel[20]){
     if(no){
         if(strcmp(no->tel, tel)==0){
@@ -193,6 +198,8 @@ int cadastroTelefone(No *no, char tel[20]){
     }
     cadastroTelefone(no->proximo, tel);
 }
+
+//FUNÇÂO feita para realizar a leitura do bloco de notas
 
 void lerArquivo(){
     FILE *file = fopen("cadastros.txt", "r");
@@ -217,6 +224,8 @@ void lerArquivo(){
         printf("\nErro ao executar o arquivo\n");
     }
 }
+
+//FUNÇÂO responsável em separar o nome, tel e senha da=o bloco de notas e armazenar em um cadastro
 
 void resgataArquivo(char texto[100]){
     int i=0;
@@ -255,6 +264,8 @@ void resgataArquivo(char texto[100]){
     empilhar(&cadastroPilha, nome, tel, senha);
 }
 
+//FUNÇÂO que pedirá ao usuário as suas credenciais
+
 int areaLogin(No* no, char nome[20], char telLogin[20]){
     char tel[20], senha[20], flag;
 
@@ -282,6 +293,8 @@ int areaLogin(No* no, char nome[20], char telLogin[20]){
     }
 }
 
+//FUNÇÔES para gerencionamento da pilha
+
 void criarPilha(Pilha *p){
     p->topo = NULL;
     p->tam = 0;
@@ -301,15 +314,7 @@ void empilhar(Pilha *p, char nome[20], char tel[20], char senha[20]){
     }
 }
 
-void imprimir(No *no){
-
-    if(no){
-        printf("%s\n", no->nome);
-        printf("%s\n", no->tel);
-        printf("%s\n", no->senha);
-        imprimir(no->proximo);
-    }
-}
+//FUNÇÂO responsável em verificar as credenciais digitas e cadastradas e retornar um login bem sucedido OU NÂO, caso estiverem erradas
 
 int verificaLogin(No *no, char tel[20], char senha[20], char nome[20], char telLogin[20]){
 
@@ -353,11 +358,15 @@ void inserirFila(BancoDeDados **fila, guardaTemporario temp){
         printf("\nErro ao alocar memoria.\n");
 }
 
+//FUNÇÂO responsavel em confirmar a troca ou n do livro
+
 void imprimirFila(BancoDeDados *fila, int idTroca, char telefoneLogin[20], char nome[20]){
     int decisao, flag=0;
     char nomeLivro[30]={};
     int idRemover;
     printf("\n\t------- TROCA ID: %d --------\n", idTroca);
+
+    //VERIFICA se aquele livro desejado já é do seu próprio DONO
     while(fila){
         if(idTroca == fila->id && strcmp(fila->tel, telefoneLogin)==0){
             printf("\nDeculpe, mas esse livro já é seu");
@@ -378,7 +387,7 @@ void imprimirFila(BancoDeDados *fila, int idTroca, char telefoneLogin[20], char 
         fila = fila->proximo;
     }
     if(flag>0){
-        printf("\nDeseja realizar o pedido: ");
+        printf("\nDeseja realizar a confirmação do pedido: ");
         printf("\n\n1 - Sim\n2 - Não");
         printf("\n\nDigite sua opção: ");
         scanf("%d", &decisao);
@@ -417,7 +426,7 @@ void verFila(Lista lista){
     }
 }
 
-//-------------------------------------------
+//------------------------------------------- FUNCÂO que o usuario logado irá ver, ou seja o SISTEMA em si
 
 void areaCliente(char nome[20], char tel[20]){
     int opCliente;
@@ -433,7 +442,7 @@ void areaCliente(char nome[20], char tel[20]){
 
         printf("\n\n\tO que deseja fazer?\n\n");
         printf("1 - Cadastrar um livro\n");
-        printf("2 - Acessar seus dados\n");
+        printf("2 - Acessar seus cadastros\n");
         printf("3 - Ver livros disponíveis para troca\n");
         printf("4 - LogOut");
 
@@ -448,45 +457,27 @@ void areaCliente(char nome[20], char tel[20]){
 
             case 2:
                 printf("\033[H\033[J");
-                printf("Informações pessoais");
+                printf("Livros Cadastrados");
 
-                printf("\n\n1 - Seus livros cadastrados");
-                printf("\n2 - Seus pedidos");
+                lerArquivoLivro();
+                numId = livrosCadastrado(tel);
+                if(numId == 0) {
+                    getchar();
+                    opCliente = 0;
+                }
+                else{
+                    printf("\n\nOpções:");
+                    printf("\n\n1 - Excluir um cadastro");
+                    printf("\n2 - Voltar");
+                    printf("\n\nDigite sua opção: ");
+                    scanf("%d", &opLiCad);
 
-                printf("\n\nDigite sua opção: ");
-                scanf("%d", &opInfo);
-
-                if(opInfo == 1)
-                {
-                    lerArquivoLivro();
-                    numId = livrosCadastrado(tel);
-                    if(numId == 0) {
-                        getchar();
-                        opCliente = 0;
-                    }
-                    else{
-                        printf("\n\nOpções:");
-                        printf("\n\n1 - Excluir um cadastro");
-                        printf("\n2 - Voltar");
-                        printf("\n\nDigite sua opção: ");
-                        scanf("%d", &opLiCad);
-
-                        if(opLiCad == 1) {
-                            deletaLivro(tel, numId);
-                            opCliente=0;
-                        }
-                        else opCliente=0;
-                    }
-
-                } else if(opInfo == 2)
-                    {
-                        minhasTrocas(tel);
-                        getchar();
+                    if(opLiCad == 1) {
+                        deletaLivro(tel, numId);
                         opCliente=0;
-
-                    }else {
-                        opCliente = 0;
                     }
+                    else opCliente=0;
+                }
             break;
 
             case 3:
@@ -501,6 +492,8 @@ void areaCliente(char nome[20], char tel[20]){
         }
     }while(opCliente != 1 && opCliente != 2 && opCliente != 3 && opCliente != 4);
 }
+
+//FUNÇÂO responsável em criar um novo cadastro de um livro
 
 void cadastroLivro(char tel[20]){
 
@@ -526,6 +519,8 @@ void cadastroLivro(char tel[20]){
     inserirInicio(&listaLivro, infoLivro[0], infoLivro[1], infoLivro[2], tel);
 }
 
+// FUNÇÂO responsável em salvar um cadastro d livro em um bloco de notas
+
 void salvarArquivo(char nome[20], char cond[20], char genero[20], char tel[20]){
 
     FILE *fileLivro;
@@ -537,6 +532,8 @@ void salvarArquivo(char nome[20], char cond[20], char genero[20], char tel[20]){
 
     fclose(fileLivro);
 }
+
+//LER livros cadastrados para posteriormente efetuar alguma troca ou deletá-lo
 
 void lerArquivoLivro(){
     FILE *fileLivro = fopen("livros.txt", "r");
@@ -561,6 +558,8 @@ void lerArquivoLivro(){
         printf("\nErro ao executar o arquivo\n");
     }
 }
+
+//FUNÇÂO feita para separar o nome do livro e suas informções para um cadastro
 
 void resgataArquivoLivro(char texto[100]){
     int i=0;
@@ -625,6 +624,8 @@ void inserirInicio(Lista *lista, char nomeLivro[20], char condicao[20], char gen
         printf("Erro ao alocar memoria!\n");
 }
 
+//FUNÇÂO que mostrará ao usuario os livros disponiveis para troca
+
 void imprimirLivro(Lista lista, char tel[20], char nomeLogin[20]){
     lerArquivo();
     int i=0, idTroca, id=1;
@@ -672,6 +673,8 @@ void imprimirLivro(Lista lista, char tel[20], char nomeLogin[20]){
     getchar();
 }
 
+//FUNÇÂO q entrará no sistema de troca/interesse naquele livro
+
 void areaTroca(BancoDeDados *sistemaLivros, int idTroca, char tel[20], char nome[20]){
     int verificaID = 0, i=0;
     printf("\033[H\033[J");
@@ -680,6 +683,8 @@ void areaTroca(BancoDeDados *sistemaLivros, int idTroca, char tel[20], char nome
     imprimirFila(sistemaLivros, idTroca, tel, nome);
 
 }
+
+//FUNÇÂO q exibirá na tela os livros cadastrado pelo seu dono
 
 int livrosCadastrado(char tel[20]){
     int i=1;
@@ -713,6 +718,8 @@ int livrosCadastrado(char tel[20]){
         return 0;
     }
 }
+
+//FUNÇÂO feita para o dono do livro excluir um cadastro
 
 void deletaLivro(char tel[20], int numeroId){
     FILE *fileLivro;
@@ -750,181 +757,24 @@ void deletaLivro(char tel[20], int numeroId){
     }
 }
 
+//ÙLTIMA função do sistema, um resumo mostrando as informções de contato do dono para o Receptor
+
 void trocaFeita(char nomeLivro[30], char nomeReceptor[20], char tel[20]){
 
-    FILE *fileLivro;
-    if(fileLivro == NULL) printf("\nErro ao executar o arquivo\n");
-    fileLivro = fopen("livros.txt", "w");
-    fclose(fileLivro);
-
-    FILE *fileTroca;
-    if(fileTroca == NULL) printf("\nErro ao executar o arquivo\n");
-
     printf("\033[H\033[J");
-    printf("Troca realizada com sucesso!");
-    printf("\n\nResumo do pedido:\n");
+    printf("Interesse realizado com sucesso!");
+    printf("\n\nAnote as informações do Resumo do pedido:\n");
 
     NoLivro *noLista = listaLivro.inicio;
 
     while(noLista){
             if(strcmp(noLista->nome, nomeLivro)==0)
             {
-                fileTroca = fopen("troca.txt", "a+");
                 printf("\nNome: %s", noLista->nome);
                 printf("\nCondição: %s", noLista->condicao);
-                printf("\nGênero: %s\n", noLista->genero);
-                fprintf(fileTroca, "%s-%s-%s,", noLista->nome, nomeReceptor, tel);
-                fclose(fileTroca);
+                printf("\nTelefone do proprietário do livro: %s\n", noLista->tel);
                 getchar();
-            }
-            else {
-                fileLivro = fopen("livros.txt", "a+");
-                if(fileLivro == NULL) printf("\nErro ao executar o arquivo\n");
-
-                fprintf(fileLivro, "%s-%s-%s-%s,", noLista->nome, noLista->condicao, noLista->genero, noLista->tel);
-
-                fclose(fileLivro);
             }
             noLista = noLista->proximo;
     }
-}
-
-//------------------------ Trocas feitas --------------------------
-
-void minhasTrocas(char tel[20]){
-    lerTrocas();
-    livrosTrocado(tel);
-
-}
-
-void lerTrocas(){
-    FILE *fileTroca = fopen("troca.txt", "r");
-    char texto[100]={' '};
-    char letra;
-    int i=0;
-
-    if(fileTroca){
-        criarLista(&listaTroca);
-        while((letra=fgetc(fileTroca))!= EOF){
-            if(letra != ','){
-                texto[i] = letra;
-                i++;
-            } else if(letra == ','){
-                resgataArquivoTroca(texto);
-                i=0;
-            }
-        }
-        fclose(fileTroca);
-    }
-    else{
-        printf("\nErro ao executar o arquivo\n");
-    }
-}
-
-void inserirInicioTroca(Lista *lista, char nomeLivro[20], char nomeReceptor[20], char tel[20]){
-    NoTroca *novo = (NoTroca*) malloc(sizeof(NoTroca));
-    if(novo){
-        strcpy(novo->nomeLivro, nomeLivro);
-        strcpy(novo->nomeDoador, nomeReceptor);
-        strcpy(novo->tel, tel);
-        novo->proximo = lista->inicio;
-        lista->inicio = novo;
-        lista->tam++;
-    }
-    else
-        printf("Erro ao alocar memoria!\n");
-}
-
-void resgataArquivoTroca(char texto[100]){
-    int i=0;
-    int aux=0, j=0;
-    char nomeLivro[20]={};
-    char nomeReceptor[20]={};
-    char tel[20]={};
-
-    while(i<strlen(texto)){
-        if(texto[i] == '-'){
-            texto[i] = ' ';
-            aux++;
-            j=0;
-        }else if(aux==0){
-            if(texto[i] != ' '){
-                nomeLivro[j] = texto[i];
-                texto[i] = ' ';
-                j++;
-            }
-        }else if(aux==1){
-            if(texto[i] != ' '){
-                nomeReceptor[j] = texto[i];
-                texto[i] = ' ';
-                j++;
-            }
-        }else if(aux==2){
-            if(texto[i] != ' '){
-                tel[j] = texto[i];
-                texto[i] = ' ';
-                j++;
-            }
-        }
-        i++;
-    }
-    inserirInicioTroca(&listaTroca, nomeLivro, nomeReceptor, tel);
-}
-
-void livrosTrocado(char tel[20]){
-
-    NoTroca *noTroca = listaTroca.inicio;
-    int flag=0;
-    int i=0;
-    ordenarNome strings[10];
-    int length=0;
-
-    printf("\033[H\033[J");
-    printf("Livro(s) trocado(s) por você\n\n- Ordenados Alfabéticamente\n\n");
-    printf("------------------------------");
-    if(listaTroca.tam > 0){
-        while(noTroca){
-            if(strcmp(noTroca->tel, tel)==0){
-                strcpy(strings[i].nomeLivro , noTroca->nomeLivro);
-                i++;
-                flag++;
-            }
-            noTroca = noTroca->proximo;
-        }
-    }
-    else {
-        printf("\n\nTudo vazio por aqui!\n");
-        getchar();
-    }
-
-    if(flag == 0){
-        printf("\n\n\tVocê ainda não realizou nenhuma troca");
-    } else {
-
-        //ORDENANDO O VETOR
-        if(flag>1){
-            int x,y;
-            char aux[20];
-            for(x=0; x<=flag; x++){
-                for(y=x+1; y<=flag; y++){
-                    if(strcmp(strings[x].nomeLivro, strings[y].nomeLivro)>0){
-                    strcpy(aux, strings[x].nomeLivro);
-                    strcpy(strings[x].nomeLivro, strings[y].nomeLivro);
-                    strcpy(strings[y].nomeLivro, aux);
-                    }
-                }
-            }
-            i=0;
-            printf("\n");
-            while(i<flag){
-                printf("\n- %s", strings[i].nomeLivro);
-                i++;
-            }
-        }
-        else{
-            printf("\n");
-            printf("\n- %s", strings[0].nomeLivro);
-        }
-    }
-    getchar();
 }
